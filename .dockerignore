@@ -1,0 +1,3 @@
+venv
+common/test_conf.ini
+docker-compose.yml

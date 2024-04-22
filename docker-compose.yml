@@ -1,0 +1,11 @@
+version: '3'
+services:      # 定义了要运行的各个服务，每个服务都会作为一个独立的容器来运行
+  web:
+    image: wisesaying
+    volumes:
+      - ./common:/app/common
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - 8000:8000
