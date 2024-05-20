@@ -29,7 +29,6 @@ DEBUG = False
 ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = ['https://www.gxszzh.cn', ]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'SituationAnalysis.apps.SituationanalysisConfig',
+    # 'SituationAnalysis.apps.SituationanalysisConfig',
+    'SituationAnalysis',
 ]
 
 MIDDLEWARE = [
@@ -119,14 +119,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
+STATIC_URL = 'llapi/admin/static/'
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
 
 TEST_CONF_DIR = os.path.join(BASE_DIR,"common/test_conf.ini")
 cf = configparser.ConfigParser()
@@ -135,3 +136,34 @@ APPID = cf.get("test_robot_conf","APPID")
 APPSECRET = cf.get("test_robot_conf","APPSECRET")
 situation_apihub_url = cf.get("test_robot_conf","situation_apihub_url")
 path = cf.get("test_robot_conf","path")
+
+BROKER_URL = 'redis://:123456@redis:6379/14'  # 任务容器地址，redis数据库地址
+CELERY_RESULT_BACKEND = 'redis://:123456@redis:6379/15'  # 任务结束的地址
+
+# BROKER_URL = 'redis://:123456@127.0.0.1:6379/14'  # 任务容器地址，redis数据库地址
+# CELERY_RESULT_BACKEND = 'redis://:123456@127.0.0.1:6379/15'  # 任务结束的地址
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
+
+
+
+
+

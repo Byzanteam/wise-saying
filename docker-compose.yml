@@ -1,11 +1,51 @@
 version: '3'
 services:      # 定义了要运行的各个服务，每个服务都会作为一个独立的容器来运行
   web:
+    links:
+      - redis      # web服务连接redis服务
+    depends_on:
+      - redis           # 启动 web 服务之前会先启动 redis 服务。
     image: wisesaying
     volumes:
       - ./common:/app/common
+      - ./db.sqlite3:/app/db.sqlite3
     restart: always
     environment:
       - TZ=Asia/Shanghai
     ports:
       - 8000:8000
+
+  celery_worker:
+    volumes:
+      - ./common:/app/common
+      - ./db.sqlite3:/app/db.sqlite3
+    links:
+      - redis
+    depends_on:
+      - redis
+    image: wisesaying
+    restart: always
+    command: celery -A WiseSaying worker -l info -P eventlet
+    environment:
+      - TZ=Asia/Shanghai
+
+  celery_beat:
+    volumes:
+      - ./common:/app/common
+      - ./db.sqlite3:/app/db.sqlite3
+    links:
+      - redis
+    depends_on:
+      - redis
+    image: wisesaying
+    restart: always
+    command: celery -A WiseSaying beat -l info
+    environment:
+      - TZ=Asia/Shanghai
+
+  redis:
+    restart: always
+    image: redis:6.2
+    environment:
+      - TZ=Asia/Shanghai
+    command: redis-server --requirepass 123456

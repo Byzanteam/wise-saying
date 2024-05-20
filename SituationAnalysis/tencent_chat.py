@@ -6,6 +6,8 @@ from tencentcloud.common.profile.http_profile import HttpProfile
 from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentCloudSDKException
 from tencentcloud.hunyuan.v20230901 import hunyuan_client, models
 from WiseSaying import settings
+import logging
+# logger = logging.getLogger('api')
 
 
 def tencent_chat(text):
@@ -33,6 +35,8 @@ def tencent_chat(text):
         sentence = ''.join([json.loads(event['data'])['Choices'][0]['Delta']['Content'] for event in resp])
         # 使用正则表达式去除多余空格，并保留特定格式
         formatted_text = re.sub(r'\s+', ' ', sentence.replace(" ", "")).strip()
+        logging.info('已成功拿到数据')
+        logging.debug('这是tencent_chat.py')
         return formatted_text
     except TencentCloudSDKException as err:
         print(err)
